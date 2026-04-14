@@ -1,0 +1,61 @@
+import sqlite3
+import pandas as pd
+
+# CSV laden
+df = pd.read_csv('/Users/samsam/Downloads/predictive_maintenance.csv')
+
+# Spaltennamen vereinfachen (anpassen, falls die CSV andere Namen nutzt)
+df = df.rename(columns={
+    'Air temperature [K]': 'AirTemp',
+    'Process temperature [K]': 'ProcTemp',
+    'Rotational speed [rpm]': 'RPM',
+    'Torque [Nm]': 'Torque',
+    'Tool wear [min]': 'ToolWear',
+    'Failure Type': 'FailureType'
+})
+
+# Verbindung zur SQLite-DB herstellen 
+conn = sqlite3.connect('maintenance.db')
+cursor = conn.cursor()
+
+# Tabelle neu anlegen :
+cursor.execute("DROP TABLE IF EXISTS predictive_maintenance;")
+
+# Tabellenerstellung mit dem gewünschten Schema
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS predictive_maintenance (
+    UDI INTEGER PRIMARY KEY,
+    Product_ID TEXT,
+    Type TEXT,
+    AirTemp REAL,
+    ProcTemp REAL,
+    RPM INTEGER,
+    Torque REAL,
+    ToolWear INTEGER,
+    FailureType TEXT
+)
+""")
+
+# Doppelte UDI-Einträge im DataFrame herausfiltern (optional, falls sauberer Import gewünscht)
+df = df.drop_duplicates(subset=['UDI'])
+
+# Einfügen: robust mit "INSERT OR IGNORE"
+for _, row in df.iterrows():
+    cursor.execute("""
+    INSERT OR IGNORE INTO predictive_maintenance
+    (UDI, Product_ID, Type, AirTemp, ProcTemp, RPM, Torque, ToolWear, FailureType)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        int(row['UDI']),
+        str(row['Product ID']),
+        str(row['Type']),
+        float(row['AirTemp']),
+        float(row['ProcTemp']),
+        int(row['RPM']),
+        float(row['Torque']),
+        int(row['ToolWear']),
+        str(row['FailureType'])
+    ))
+
+conn.commit()
+conn.close()
