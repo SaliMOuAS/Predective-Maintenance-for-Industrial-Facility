@@ -14,11 +14,11 @@ os.makedirs('results', exist_ok=True)
 
 # Daten laden
 try:
-    df = pd.read_csv('/Users/samsam/Downloads/predictive_maintenance.csv')
+    df = pd.read_csv('data/predictive_maintenance.csv')
     print("✅ Daten erfolgreich geladen!")
 except FileNotFoundError:
     print("❌ Datei nicht gefunden. Bitte überprüfe den Pfad:")
-    print("   Erwarteter Pfad: 'data/raw/predictive_maintenance.csv'")
+    print("   Erwarteter Pfad: 'data/predictive_maintenance.csv'")
     # Alternativ für den AI4I Datensatz:
     # df = pd.read_csv('ai4i2020.csv')  # Original-Dateiname des Datensatzes
 

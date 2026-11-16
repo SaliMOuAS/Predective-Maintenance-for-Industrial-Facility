@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Data and generated files
+data/
+maintenance.db
+results/
+
+.DS_Store
+.vscode/
+.idea/

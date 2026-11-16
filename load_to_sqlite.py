@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 # CSV laden
-df = pd.read_csv('/Users/samsam/Downloads/predictive_maintenance.csv')
+df = pd.read_csv('data/predictive_maintenance.csv')
 
 # Spaltennamen vereinfachen (anpassen, falls die CSV andere Namen nutzt)
 df = df.rename(columns={
